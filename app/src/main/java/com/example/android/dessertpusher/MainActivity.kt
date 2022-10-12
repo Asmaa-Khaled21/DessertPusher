@@ -18,6 +18,7 @@ package com.example.android.dessertpusher
 
 import android.content.ActivityNotFoundException
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -28,7 +29,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleObserver
 import com.example.android.dessertpusher.databinding.ActivityMainBinding
 import timber.log.Timber
-
+const val KEY_REVENUE ="key_revenue"
 class MainActivity : AppCompatActivity(), LifecycleObserver {
 
     private var revenue = 0
@@ -77,6 +78,9 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
          // Create a Dessert Timer
         dessertTimer = DessertTimer(this.lifecycle)
 
+        if (savedInstanceState != null) {
+            revenue = savedInstanceState.getInt(KEY_REVENUE, 0)
+        }
         // Set the TextViews to the right values
         binding.revenue = revenue
         binding.amountSold = dessertsSold
@@ -151,6 +155,11 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
         }
         return super.onOptionsItemSelected(item)
     }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(KEY_REVENUE,revenue)
+        Timber.i("onSaveInstanceState")
+    }
     /** Life Cycle here **/
     override fun onStart() {
         super.onStart()
@@ -172,6 +181,8 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
         return super.isDestroyed()
         Timber.i("/////////////  isDestroyed /////////////")
     }
+
+
 
     override fun onStop() {
         super.onStop()
